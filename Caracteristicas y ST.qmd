@@ -1,0 +1,99 @@
+---
+title: "New"
+format: html
+editor: visual
+  html:
+    embed-resources: true
+    toc: true
+---
+
+```{r}
+library(tidyverse)
+library(fpp3)
+```
+
+We'll use the function 'features()':
+
+
+```{r}
+aus_accommodation
+
+aus_accommodation |> 
+  pivot_longer(cols=Takings:CPI, names_to= "variable",
+               values_to= "valor") |> 
+  features(valor,
+           list(media=mean,
+                desv_std=sd,
+                minimo=min,
+                maximo=max,
+                mediana=median)
+           ) |> 
+  pivot_wider(names_from = variable, values_from= media)
+```
+
+```{r}
+aus_accommodation
+
+aus_accommodation |> 
+  pivot_longer(cols=Takings:CPI, names_to= "variable",
+               values_to= "valor") |> 
+  features(valor,
+           list(media=mean,
+                desv_std=sd,
+                minimo=min,
+                maximo=max,
+                mediana=median)
+           ) |> 
+  pivot_wider(names_from = variable, values_from= media:mediana)
+```
+
+```{r}
+aus_accommodation
+
+aus_accommodation |> 
+  pivot_longer(cols=Takings:CPI, names_to= "variable",
+               values_to= "valor") |> 
+  features(valor,
+           list(media=mean,
+                desv_std=sd,
+                minimo=min,
+                maximo=max,
+                mediana=median)
+           )
+```
+
+```{r}
+aus_accommodation
+
+aus_accommodation_long <- aus_accommodation |> 
+  pivot_longer(cols = Takings:CPI, names_to = "variable",
+               values_to = "valor")
+
+aus_accommodation_long |> 
+  features(valor,
+           list(media = mean,
+                desv_std = sd,
+                minimo = min,
+                maximo = max,
+                mediana = median)
+           ) #|> 
+  #pivot_wider(names_from = variable, values_from = media:mediana)
+
+aus_accommodation_long
+```
+
+
+```{r}
+
+aus_accommodation_long |> 
+  features(valor, feat_stl)
+
+
+```
+
+```{r}
+aus_accommodation_long |> 
+  features(valor, features=guerrero)
+
+```
+
