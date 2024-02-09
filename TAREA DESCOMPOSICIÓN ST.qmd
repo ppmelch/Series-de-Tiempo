@@ -79,7 +79,7 @@ global_economy |>
 
 ```
 
-2.  iii\.
+2.  iii.
 
 ```{r}
 data("vic_elec")
@@ -101,18 +101,57 @@ filtered_data %>%
 
 2.   iii. La demanda de electricidad en el estado de Victoria (Australia), la más alta fue en los primeros meses de 2014, entre Enero y Febrero.
 
+
+
+3.
 ```{r}
 canadian_gas |> 
   autoplot()
 
 ```
 
+3.  Yo creo que no , porque veo que la serie tiene una tendencia con el tiempo, casi siempre va en aumento. Podriamos considerar otras transformaciones.
+
+
+4.  
 ```{r}
 data("plastics")
 head(plastics)
 autoplot(plastics)
 ```
 
-4.  
+  i.  Yo veo que hay una tendencia en el tiempo, pero siempre de crecimiento , aunque no es tan brusco el cambio, cambia.
+  
+  ii. 
+```{r}
+data("plastics")
+head(plastics)
 
-    i.  Yo veo que hay una tendencia en el tiempo, pero siempre de crecimiento , aunque no es tan brusco el cambio, cambia.
+plastics_decomp <- decompose(plastics)
+autoplot(plastics_decomp)
+
+```
+  iii. 
+  Los datos sí coiciden, nomas que veo que cambia tantito la grafica, más en lo ancho, en los datos no veo que cambie en nada. 
+
+  iv.
+```{r}
+data("plastics")
+head(plastics)
+destacionarios<-plastics - trend - seasonal
+autoplot(destacionarios)
+```
+
+  V.
+  
+```{r}
+data("plastics")
+head(plastics)
+plastics_outlier <- plastics
+plastics_outlier[10] <- plastics_outlier[10] + 500 
+plastics_decomp_outlier <- decompose(plastics_outlier)
+autoplot(plastics_decomp_outlier)
+```
+  v. siento que si cambia, porque se ve que al principio como que tiene un pico muy grande, pero despues recae rapidamente.Ese es el efecto que le veo.
+  
+  vi. Opino, que si cambiaria ,ya que siento que tendría mayor repercución si estuviera en el final de la serie. 
