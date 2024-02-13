@@ -1,0 +1,86 @@
+---
+title: "Pronósticos 1"
+format: html
+editor: visual
+---
+
+# **Un flujo de trabajo limpio de pronóstico**
+
+1.  Preparación de los datos (limpieza)
+
+2.  Gráfica de los datos (visualización)
+
+3.  Definición del modelo (especificación)
+
+4.  Entrenamiento del modelo (estimación)
+
+5.  Revisar el desempeño del modelo (evaluación)
+
+6.  Producir pronósticos
+
+0° Cargar paquetes
+
+```{r}
+library("easypackages")
+packages("tidyverse","fpp3", "tsibble", "feasts","fable", "patchwork")
+```
+
+1° Preparación de los datos (limpieza). Utilizamos varias funciones de las paqueterías `tsibble` y `tidyverse`, que simplifican mucho estas tareas.
+
+2° Gráfica de los datos (visualización)
+
+```{r}
+global_economy %>%
+  filter(Country == "Sweden") %>%
+  autoplot(GDP) +
+    ggtitle("PIB de Suecia") + ylab("$US billions")
+
+
+```
+
+3.  Definición del modelo (especificación)
+
+    Antes de ajustar un modelo a los datos, se debe **describir** el modelo. Existen muchos tipos de modelos de pronóstico distintos, y es muy importante que escojamos el más apropiado, para obtener buenos pronósticos.
+
+    Los modelos en **R**, como vimos con la regresión lineal (`lm(y ~ x1 + x2 + ... + xn)`), se especifican en formato de fórmula ( `y ~ x`), siendo la `y` la variable dependiente (o variable a explicar), y la o las `x` las variables independientes (o variables explicativas, regresoras, etc.).
+
+    Podemos tomar, p. ej., un modelo lineal de series de tiempo, `TSLM`, modela los datos que se le incluyan mediante una tendencia lineal.
+
+```{r}
+TSLM(GDP  ~ trend())
+```
+
+4.  Entrenamiento del modelo (estimación)
+
+```{r}
+fit <- global_economy %>%
+  model(Modelo_tendencia = TSLM(GDP ~ trend()))
+```
+
+Con esto se ajustó un modelo lineal y el objeto resultante es un `mable` (model table).
+
+```{r}
+fit
+```
+
+5.  Revisar el desempeño del modelo (evaluación)
+
+Ya teniendo el modelo entrenado, debemos revisar el *performance* en los datos reales. Esto es, ¿qué tan bien se ajusta el modelo a los datos?, en caso de estar indecisos entre varios modelos, ¿cuál escogemos como el mejor y por qué?
+
+6.  Producir pronósticos
+
+Cuando ya evaluamos que el modelo ajustado se encuentra dentro de los parámetros deseados, podemos proceder a realizar los pronósticos. En .**R**, podemos usar el comando `forecast()`, en el cual debemos especificar el número de periodos a pronosticar. Por ejemplo, par pronosticar los siguientes 12 meses, escribiríamos `h = 12`. También podemos usar lenguaje ordinario (en inglés), `h = "1 year"`.
+
+```{r}
+fcst <- fit %>% forecast(h = "3 years")
+fcst
+```
+
+El resultado es una `fable` (forecasting table) o tabla de pronósticos. El pronóstico se puede graficar fácilmente junto con los datos reales, usando `autoplot()`.
+
+```{r}
+fcst %>% 
+  filter(Country=="Sweden") %>%
+  autoplot(global_economy) +
+    ggtitle("PIB de Suecia") + ylab("$US billions")
+```
