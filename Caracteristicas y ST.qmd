@@ -14,7 +14,6 @@ library(fpp3)
 
 We'll use the function 'features()':
 
-
 ```{r}
 aus_accommodation
 
@@ -82,7 +81,6 @@ aus_accommodation_long |>
 aus_accommodation_long
 ```
 
-
 ```{r}
 
 aus_accommodation_long |> 
@@ -95,5 +93,5 @@ aus_accommodation_long |>
 aus_accommodation_long |> 
   features(valor, features=guerrero)
 
-```
 
+```
