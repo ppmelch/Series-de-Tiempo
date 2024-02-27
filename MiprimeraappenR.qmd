@@ -1,9 +1,10 @@
 ---
-title: "Mi primera app"
-author: "Diego Lozoya"
+title: "perruski"
+author: "José Armando Melchor Soto"
 format: dashboard
 server: shiny
 ---
+
 
 ```{r}
 #| context: setup

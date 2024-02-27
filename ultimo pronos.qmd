@@ -1,0 +1,97 @@
+---
+title: "Repaso Examen"
+format: html
+editor: visual
+---
+
+## Repaso
+
+```{r}
+#| message: false
+
+library(tidyverse)
+library(fpp3)
+```
+
+```{r}
+mex <- global_economy |> 
+  filter(Country == "Mexico") |> 
+  drop_na() |> 
+  select(-c(Country, Code))
+
+mex |> 
+  features(Growth, features = guerrero )
+
+mex |> 
+  autoplot(box_cox(Growth, lambda=0.7249))
+```
+
+```{r}
+
+mex_fit <- mex |> 
+  model(
+    media=MEAN(box_cox(Growth, lambda =0.7249)),
+    naive= NAIVE(box_cox(Growth, lambda= 0.7249)),
+    drift= RW(box_cox(Growth, lambda= 0.7249)~ drift())
+  )
+mex_fit
+```
+
+```{r}
+mex_fit |> 
+  augment()
+
+
+```
+
+```{r}
+mex_fit |> 
+  augment() |> 
+  features(.innov, ljung_box, lag= 10 , dof=0 )
+```
+
+Como el p-value de los tres es mayor a nuestra $\alpha$ ; \$p\_{value}=0.5\$, NO RECHAZAMOS $H_0 : \text{"Los residuos son ruido blanco"}$.\
+
+### Media
+
+```{r}
+#| warning: false 
+mex_fit |> 
+  select(media) |> 
+  gg_tsresiduals()
+```
+
+### NAIVE
+
+```{r}
+#| warning: false 
+mex_fit |> 
+  select(naive) |> 
+  gg_tsresiduals()
+
+```
+
+### Drift
+
+```{r}
+
+#| Warning: false 
+mex_fit |> 
+  select(drift) |> 
+  gg_tsresiduals()
+```
+
+### Forecast
+
+```{r}
+mex_fc <- mex_fit |> 
+  forecast(h="6 years")
+
+mex_fc
+
+mex_fc |> 
+  autoplot(mex)+
+  facet_wrap(~.model)+
+  theme(legend.position = "none")
+  
+```

@@ -112,6 +112,7 @@ us_retail_employment
 
 
 ```
+
 ```{r}
 us_retail_employment %>%
   autoplot(Employed) +
@@ -122,14 +123,12 @@ us_retail_employment %>%
 
 ```
 
-
 ```{r}
 dcmp <- us_retail_employment %>%
   model(Descomposicion = STL(Employed))
 
 components(dcmp)
 ```
-
 
 ```{r}
 
@@ -186,7 +185,6 @@ autoplot()
 
 ```
 
-
 ```{r}
 
 empleo_stl <- empleo_tsbl |> 
@@ -202,5 +200,3 @@ empleo_stl |>
 
 
 ```
-
-
